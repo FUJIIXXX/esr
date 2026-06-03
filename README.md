@@ -28,7 +28,19 @@ message passing for hypergraph neural networks.
 python hg.py
 ```
 
-or:
+The default `hg.py` mode now runs validation, evaluates the three simple baselines over 10 seeds and saves a reward plot. Generated files are written to `results/baselines/`:
+
+- `baseline_metrics.csv`
+- `baseline_summary.txt`
+- `baseline_reward.png`
+
+For validation only, run:
+
+```bash
+python hg.py --mode validate
+```
+
+or call the module directly:
 
 ```bash
 python -m experiments.minimal_validation
@@ -104,6 +116,12 @@ Then plot a line chart, for example reward over seeds:
 
 ```bash
 python -m experiments.plot_baselines --metric reward
+```
+
+You can also use the all-in-one entrypoint, which runs validation, comparison and plotting together:
+
+```bash
+python hg.py --mode all --num-seeds 30 --metric reward
 ```
 
 You can also plot `completion_rate`, `remote_rate`, `coarse_rate`, `fine_rate` or `priority_completion_rate` by changing `--metric`.

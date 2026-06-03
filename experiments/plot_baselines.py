@@ -29,25 +29,32 @@ def load_series(path: Path, metric: str) -> dict[str, list[tuple[int, float]]]:
     return series
 
 
-def main() -> None:
-    args = parse_args()
+def plot_metric(input_path: Path, metric: str, output_path: Path) -> None:
+    """Create and save a line chart for one metric from baseline CSV results."""
+
     import matplotlib.pyplot as plt
 
-    series = load_series(args.input, args.metric)
-    args.output.parent.mkdir(parents=True, exist_ok=True)
+    series = load_series(input_path, metric)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     for method, points in sorted(series.items()):
         points = sorted(points)
         seeds = [seed for seed, _ in points]
         values = [value for _, value in points]
         plt.plot(seeds, values, marker="o", linewidth=1.5, label=method)
     plt.xlabel("seed")
-    plt.ylabel(args.metric)
-    plt.title(f"Baseline comparison: {args.metric}")
+    plt.ylabel(metric)
+    plt.title(f"Baseline comparison: {metric}")
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
-    plt.savefig(args.output, dpi=200)
-    print(f"Saved plot to {args.output}")
+    plt.savefig(output_path, dpi=200)
+    plt.close()
+    print(f"Saved plot to {output_path}")
+
+
+def main() -> None:
+    args = parse_args()
+    plot_metric(input_path=args.input, metric=args.metric, output_path=args.output)
 
 
 if __name__ == "__main__":
